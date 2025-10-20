@@ -1,0 +1,26 @@
+# Core dependencies
+click>=8.0.0              # CLI framework
+rich>=13.0.0              # Beautiful terminal output and progress bars
+pydantic>=2.0.0           # Data validation and settings management
+
+# Web interface
+flask>=2.3.0              # Web framework
+flask-cors>=4.0.0         # Cross-origin requests
+flask-socketio>=5.3.0     # Real-time communication
+
+# File processing
+pillow>=10.0.0            # Image processing
+python-magic>=0.4.27      # File type detection
+pyyaml>=6.0               # YAML configuration files
+
+# Optional: Advanced features
+# pandas>=2.0.0           # Data processing (uncomment if needed)
+# openpyxl>=3.1.0         # Excel files (uncomment if needed)
+# pypdf>=3.0.0            # PDF processing (uncomment if needed)
+
+# Development dependencies (install with: pip install -r requirements-dev.txt)
+# pytest>=7.0.0
+# pytest-cov>=4.0.0
+# black>=23.0.0
+# flake8>=6.0.0
+# mypy>=1.0.0

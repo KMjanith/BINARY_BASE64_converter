@@ -1,0 +1,57 @@
+# Default configuration for Universal Format Converter
+# This file can be copied to ~/.converter/config.yaml for user customization
+
+# General settings
+app:
+  name: "Universal Format Converter"
+  version: "1.0.0"
+  debug: false
+  log_level: "INFO"
+
+# Conversion settings
+conversion:
+  # Maximum file size in MB
+  max_file_size: 100
+  
+  # Temporary directory for processing
+  temp_dir: "/tmp/converter"
+  
+  # Default quality settings for lossy conversions
+  default_quality:
+    image: 85
+    audio: 128  # kbps
+    video: 1000 # kbps
+
+# Web interface settings
+web:
+  host: "127.0.0.1"
+  port: 5000
+  secret_key: "your-secret-key-change-this"
+  upload_folder: "uploads"
+  max_content_length: 104857600  # 100MB in bytes
+
+# CLI settings  
+cli:
+  progress_bar: true
+  verbose: false
+  output_format: "table"  # table, json, yaml
+
+# Plugin settings
+plugins:
+  auto_load: true
+  plugin_directories:
+    - "~/.converter/plugins"
+    - "./plugins"
+
+# Format detection settings
+format_detection:
+  use_magic: true
+  fallback_to_extension: true
+  confidence_threshold: 0.8
+
+# Logging configuration
+logging:
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "converter.log"
+  max_size: 10485760  # 10MB
+  backup_count: 5
