@@ -1,8 +1,8 @@
-# Universal Format Converter 🔄
+# Universal Format Converter
 
 A comprehensive Python-based conversion system that supports converting between various data formats with both CLI and web interfaces. Currently supports **77+ conversion combinations** with modern web GUI and extensible plugin architecture.
 
-## 🚀 Features
+## Features
 
 ### Supported Conversions
 
@@ -35,7 +35,7 @@ A comprehensive Python-based conversion system that supports converting between 
 - MD5, SHA1, SHA256 hashing
 - CRC32 checksums
 
-## 🏗️ Architecture
+## Architecture
 
 ### Modular Plugin System
 - **Base Converter Architecture**: Abstract base classes with plugin registration
@@ -49,7 +49,7 @@ A comprehensive Python-based conversion system that supports converting between 
    pip install flask click rich pyyaml pillow python-magic
    ```
 
-### 🌐 Start the Web Interface
+### Start the Web Interface
 
 **Option 1: Direct Flask App (Recommended)**
 ```bash
@@ -66,7 +66,7 @@ python -m src.web.app
 
 The web interface will be available at: **http://127.0.0.1:5000**
 
-### 💻 Use the CLI Interface
+### Use the CLI Interface
 
 ```bash
 # From project root with virtual environment activated
@@ -82,36 +82,36 @@ python -m src.cli.main convert "SGVsbG8gV29ybGQ=" --from base64 --to text
 python -m src.cli.main list-conversions
 ```
 
-## 🎯 Supported Conversions (73+ Types!)
+## Supported Conversions (73+ Types)
 
-### 📝 Text & Encoding (12 conversions)
+### Text & Encoding (12 conversions)
 - **Binary** ↔ **Base64** ↔ **Hexadecimal**
 - **Text** ↔ **URL Encoded** ↔ **HTML Encoded** 
 - **ASCII** ↔ **Unicode** ↔ **Binary**
 
-### 🔢 Number Systems (18 conversions)
+### Number Systems (18 conversions)
 - **Decimal** ↔ **Binary** ↔ **Hexadecimal** ↔ **Octal**
 - **Binary Numbers** ↔ **Decimal Numbers**
 - Full cross-format number base conversions
 
-### 🔐 Cryptographic Hashes (15 conversions)
+### Cryptographic Hashes (15 conversions)
 - **Text/Binary** → **MD5**, **SHA1**, **SHA256**, **SHA512**
 - **Secure hashing** for data integrity and validation
 
-### 🗃️ Data Formats (12 conversions)
+### Data Formats (12 conversions)
 - **JSON** ↔ **Python Dictionary** ↔ **YAML**
 - **CSV** ↔ **JSON** ↔ **Lists**
 - Structured data interchange formats
 
-### 🖼️ Image Formats (26 conversions)
+### Image Formats (26 conversions)
 - **JPEG** ↔ **PNG** ↔ **GIF** ↔ **BMP**
 - **TIFF** ↔ **WebP** ↔ **ICO**
 - **Image** ↔ **Base64** (universal format)
 - Quality control, transparency handling, compression options
 
-## 🖥️ Usage Examples
+## Usage Examples
 
-### 🌐 Web Interface (Recommended for Beginners)
+### Web Interface (Recommended for Beginners)
 
 1. **Start the web server:**
    ```bash
@@ -123,13 +123,13 @@ python -m src.cli.main list-conversions
 2. **Open in browser:** `http://127.0.0.1:5000`
 
 3. **Features:**
-   - 📋 **Dropdown menus** for easy format selection
-   - 🎨 **Interactive examples** with one-click loading
-   - ⚡ **Real-time conversion** with loading animations
-   - 🎯 **Error handling** with helpful messages
-   - 📱 **Responsive design** for mobile and desktop
+   - Dropdown menus for easy format selection
+   - Interactive examples with one-click loading
+   - Real-time conversion with loading animations
+   - Error handling with helpful messages
+   - Responsive design for mobile and desktop
 
-### 💻 Command Line Interface (Advanced Users)
+### Command Line Interface (Advanced Users)
 
 ```bash
 # Text conversions
@@ -152,7 +152,7 @@ python -m src.cli.main convert "sensitive data" --from text --to sha256
 python -m src.cli.main list-conversions
 ```
 
-### 🐍 Python API Integration
+### Python API Integration
 
 ```python
 # Add the project root to Python path
@@ -184,7 +184,7 @@ converter = registry.get_converter("png", "jpeg")
 jpeg_data = converter.convert(png_base64_data, quality=95)
 ```
 
-## 🏗️ Project Architecture
+## Project Architecture
 
 ```
 /home/kavindu-janith/FUN/BINARY_BASE64_converter/
@@ -210,14 +210,14 @@ jpeg_data = converter.convert(png_base64_data, quality=95)
 └── README.md                     # This file
 ```
 
-### 🧩 Key Design Patterns
+### Key Design Patterns
 
 - **Registry Pattern**: Automatic converter discovery and registration
 - **Decorator Pattern**: `@register_converter` for clean registration
 - **Abstract Base Class**: Consistent converter interface via `BaseConverter`
 - **Factory Pattern**: Dynamic converter instantiation via registry
 
-## 🧪 Testing & Demonstrations
+## Testing & Demonstrations
 
 ### Built-in Test Scripts
 
@@ -245,17 +245,17 @@ python -m src.cli.main convert "test data" --from text --to base64
 python -m src.cli.main list-conversions | head -20
 ```
 
-## 🎓 Learning Outcomes & Next Steps
+## Learning Outcomes & Next Steps
 
 ### What You've Built
-- ✅ **Complete Format Converter** with 73+ conversion types
-- ✅ **Modern Web Application** using Flask, HTML, CSS, JavaScript
-- ✅ **Command Line Tool** with Click and Rich libraries
-- ✅ **Image Processing System** using PIL/Pillow
-- ✅ **Object-Oriented Design** with abstract base classes
-- ✅ **Registry Pattern Implementation** for plugin architecture
+- Complete Format Converter with 73+ conversion types
+- Modern Web Application using Flask, HTML, CSS, JavaScript
+- Command Line Tool with Click and Rich libraries
+- Image Processing System using PIL/Pillow
+- Object-Oriented Design with abstract base classes
+- Registry Pattern Implementation for plugin architecture
 
-### 📚 Concepts Mastered
+### Concepts Mastered
 - **Python OOP**: Inheritance, abstract classes, decorators
 - **Web Development**: Flask framework, templates, AJAX
 - **CLI Development**: Argument parsing, user interaction  
@@ -263,7 +263,7 @@ python -m src.cli.main list-conversions | head -20
 - **Error Handling**: Custom exceptions, validation
 - **Code Organization**: Modular design, separation of concerns
 
-### � Possible Enhancements (Learning Opportunities)
+### Possible Enhancements (Learning Opportunities)
 1. **Add Compression**: ZIP, GZIP, TAR format support
 2. **Batch Processing**: Multi-file conversion with progress bars
 3. **Format Detection**: Auto-detect file types by content
@@ -272,7 +272,7 @@ python -m src.cli.main list-conversions | head -20
 6. **Performance**: Async processing for large files
 7. **Database**: Save conversion history and user preferences
 
-## � Troubleshooting
+## Troubleshooting
 
 ### Common Issues & Solutions
 
@@ -300,16 +300,16 @@ export FLASK_RUN_PORT=8080
 pip install flask click rich pyyaml pillow python-magic
 ```
 
-## 📊 Project Statistics
+## Project Statistics
 
-- **📁 Source Files**: 15+ Python modules
-- **🔄 Conversions**: 73+ different format combinations
-- **🖼️ Image Formats**: 7 formats (JPEG, PNG, GIF, BMP, TIFF, WebP, ICO)
-- **💻 CLI Commands**: Interactive and direct conversion modes
-- **🌐 Web Features**: Responsive UI with real-time conversion
-- **📚 Learning Concepts**: 10+ advanced Python programming patterns
+- **Source Files**: 15+ Python modules
+- **Conversions**: 73+ different format combinations
+- **Image Formats**: 7 formats (JPEG, PNG, GIF, BMP, TIFF, WebP, ICO)
+- **CLI Commands**: Interactive and direct conversion modes
+- **Web Features**: Responsive UI with real-time conversion
+- **Learning Concepts**: 10+ advanced Python programming patterns
 
-## 🎉 Success! You've Built
+## Success! You've Built
 
 A **production-ready format converter** that demonstrates:
 - Modern Python development practices
@@ -319,11 +319,11 @@ A **production-ready format converter** that demonstrates:
 - Clean code architecture
 - User-friendly interfaces
 
-**Perfect for portfolios, interviews, and continued learning!** 🚀
+**Perfect for portfolios, interviews, and continued learning!**
 
 ---
 
-### 📞 Quick Start Summary
+### Quick Start Summary
 
 ```bash
 cd /home/kavindu-janith/FUN/BINARY_BASE64_converter
@@ -332,4 +332,4 @@ PYTHONPATH=. python src/web/app.py
 # Open http://127.0.0.1:5000 in browser
 ```
 
-**Happy Converting!** 🔄✨
+**Happy Converting!**
