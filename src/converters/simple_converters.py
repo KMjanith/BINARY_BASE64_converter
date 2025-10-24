@@ -1,15 +1,4 @@
-"""
-Simple Converter Classes
-=======================
 
-This module implements simple, single-direction converters.
-Each converter handles one specific conversion type without automatic reversal.
-
-Learning Concepts:
-- Single Responsibility Principle
-- Explicit converter registration
-- Simple inheritance hierarchy
-"""
 
 import base64
 import binascii
@@ -36,9 +25,25 @@ try:
 except ImportError:
     YAML_AVAILABLE = False
 
-# ============================================================================
-# TEXT AND BINARY ENCODING CONVERTERS
-# ============================================================================
+# Hexadecimal to binary (01 string) converter
+@register_converter('hex', 'binary_01', 'Convert hexadecimal string to binary (01 string)')
+class HexToBinary01Converter(BaseConverter):
+    """
+    Convert hexadecimal string to binary (01 string) representation.
+    """
+    def __init__(self, from_format='hex', to_format='binary_01'):
+        super().__init__('hex', 'binary_01', 'Convert hexadecimal string to binary (01 string)')
+    def validate_input(self, data: Any) -> None:
+        super().validate_input(data)
+        if not isinstance(data, str):
+            raise ValidationError(f"Hex input requires string, got {type(data).__name__}")
+    def _convert(self, data: str, **options) -> str:
+        try:
+            cleaned_data = data.replace('0x', '').replace(':', '').replace('-', '').replace(' ', '')
+            b = bytes.fromhex(cleaned_data)
+            return ''.join(f'{byte:08b}' for byte in b)
+        except Exception as e:
+            raise ConversionError(f"Failed to decode hex to binary (01 string): {e}", original_error=e)
 
 @register_converter('binary', 'base64', 'Convert binary data to Base64 string')
 class BinaryToBase64Converter(BaseConverter):

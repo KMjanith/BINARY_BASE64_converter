@@ -36,6 +36,28 @@ from ..utils.exceptions import ConversionError, ValidationError
 
 class ImageConverter(BaseConverter):
     """Base class for all image converters with common functionality."""
+
+# JPEG to binary (01 string) converter
+@register_converter("jpeg", "binary")
+class JpegToBinaryConverter(ImageConverter):
+    """Convert JPEG image to binary (01 string) representation."""
+    def _convert(self, data: Union[str, bytes], **options) -> str:
+        """Convert JPEG to binary string (01 representation)."""
+        if isinstance(data, str):
+            # If it's a file path
+            if os.path.exists(data):
+                with open(data, 'rb') as f:
+                    image_bytes = f.read()
+            else:
+                # Try as base64
+                try:
+                    image_bytes = base64.b64decode(data)
+                except:
+                    raise ValidationError("Invalid JPEG data provided")
+        else:
+            image_bytes = data
+        # Convert bytes to 01 string
+        return ''.join(f'{byte:08b}' for byte in image_bytes)
     
     SUPPORTED_FORMATS = {
         'jpeg': {'extensions': ['.jpg', '.jpeg'], 'mime': 'image/jpeg', 'mode': 'RGB'},
@@ -847,3 +869,298 @@ class IcoToHexConverter(ImageConverter):
             image_bytes = data
         
         return image_bytes.hex()
+
+
+# --- DYNAMIC CONVERTER REGISTRATION (must be after all imports/classes) ---
+# Helper functions for dynamic converters
+def _binary_to_image(data, fmt):
+    """Convert binary string (01) to image format."""
+    if not isinstance(data, str):
+        data = str(data)
+    # Remove any whitespace and common separators
+    data = data.replace(' ', '').replace('\n', '').replace('\r', '').replace('\t', '')
+    # Validate binary string
+    invalid_chars = [c for c in data if c not in '01']
+    if invalid_chars:
+        # Get first few invalid characters for error message
+        invalid_sample = ''.join(set(invalid_chars))[:10]
+        raise ValidationError(f"Input contains invalid characters: '{invalid_sample}'. Only 0 and 1 are allowed.")
+    # Convert binary string to bytes
+    if len(data) % 8 != 0:
+        # Pad with zeros if needed
+        padding = 8 - (len(data) % 8)
+        data = '0' * padding + data
+    image_bytes = bytes(int(data[i:i+8], 2) for i in range(0, len(data), 8))
+    
+    # Load and convert image
+    try:
+        image = Image.open(io.BytesIO(image_bytes))
+        output = io.BytesIO()
+        
+        # Handle JPEG format specifically (requires RGB mode)
+        if fmt.lower() == 'jpeg':
+            if image.mode in ('RGBA', 'LA', 'P'):
+                # Convert to RGB for JPEG
+                if image.mode == 'P':
+                    image = image.convert('RGBA')
+                # Create white background
+                background = Image.new('RGB', image.size, (255, 255, 255))
+                if image.mode == 'RGBA' or image.mode == 'LA':
+                    background.paste(image, mask=image.split()[-1])  # Use alpha channel as mask
+                else:
+                    background.paste(image)
+                image = background
+            elif image.mode != 'RGB':
+                image = image.convert('RGB')
+        
+        image.save(output, format=fmt.upper())
+        return output.getvalue()
+    except Exception as e:
+        raise ConversionError(f"Failed to convert binary to {fmt.upper()} image: {str(e)}")
+
+def _hex_to_image(data, fmt):
+    """Convert hex string to image format."""
+    if not isinstance(data, str):
+        data = str(data)
+    # Remove common hex prefixes and separators
+    cleaned = data.replace('0x', '').replace(':', '').replace('-', '').replace(' ', '').replace('\n', '').replace('\r', '').replace('\t', '')
+    
+    # Validate hex string
+    try:
+        image_bytes = bytes.fromhex(cleaned)
+    except ValueError as e:
+        raise ValidationError(f"Invalid hexadecimal string: {str(e)}")
+    
+    # Convert to image
+    try:
+        image = Image.open(io.BytesIO(image_bytes))
+        output = io.BytesIO()
+        
+        # Handle JPEG format specifically (requires RGB mode)
+        if fmt.lower() == 'jpeg':
+            if image.mode in ('RGBA', 'LA', 'P'):
+                # Convert to RGB for JPEG
+                if image.mode == 'P':
+                    image = image.convert('RGBA')
+                # Create white background
+                background = Image.new('RGB', image.size, (255, 255, 255))
+                if image.mode == 'RGBA' or image.mode == 'LA':
+                    background.paste(image, mask=image.split()[-1])  # Use alpha channel as mask
+                else:
+                    background.paste(image)
+                image = background
+            elif image.mode != 'RGB':
+                image = image.convert('RGB')
+        
+        image.save(output, format=fmt.upper())
+        return output.getvalue()
+    except Exception as e:
+        raise ConversionError(f"Failed to convert hex to {fmt.upper()} image: {str(e)}")
+
+def _image_to_base64(data, fmt):
+    """Convert image data to base64 string in specified format."""
+    # Load image from data
+    if isinstance(data, str):
+        if os.path.exists(data):
+            with open(data, 'rb') as f:
+                data = f.read()
+        else:
+            try:
+                data = base64.b64decode(data)
+            except:
+                raise ValidationError("Invalid image data")
+    
+    image = Image.open(io.BytesIO(data))
+    output = io.BytesIO()
+    image.save(output, format=fmt.upper())
+    return base64.b64encode(output.getvalue()).decode('utf-8')
+
+def _image_to_binary_bytes(data, fmt):
+    """Convert image data to binary bytes in specified format."""
+    # Load image from data
+    if isinstance(data, str):
+        if os.path.exists(data):
+            with open(data, 'rb') as f:
+                data = f.read()
+        else:
+            try:
+                data = base64.b64decode(data)
+            except:
+                raise ValidationError("Invalid image data")
+    
+    image = Image.open(io.BytesIO(data))
+    output = io.BytesIO()
+    image.save(output, format=fmt.upper())
+    return output.getvalue()
+
+# Register dynamic converters for all image formats
+for fmt in ["jpeg", "png", "gif", "bmp", "tiff", "webp", "ico"]:
+    # Binary (01 string) to Image
+    exec(f"""
+@register_converter('binary', '{fmt}')
+class BinaryTo{fmt.capitalize()}Converter(ImageConverter):
+    '''Convert binary (01 string) to {fmt.upper()} image.'''
+    def _convert(self, data, **options):
+        return _binary_to_image(data, '{fmt}')
+""", globals())
+
+for fmt in ["jpeg", "png", "gif", "bmp", "tiff", "webp", "ico"]:
+    # Hex to Image - now including JPEG
+    exec(f"""
+@register_converter('hex', '{fmt}')
+class HexTo{fmt.capitalize()}Converter(ImageConverter):
+    '''Convert hex string to {fmt.upper()} image.'''
+    def _convert(self, data, **options):
+        return _hex_to_image(data, '{fmt}')
+""", globals())
+
+# Add image formats to base64 converters (reverse direction)
+for fmt in ["jpeg", "png", "gif", "bmp", "tiff", "webp", "ico"]:
+    exec(f"""
+@register_converter('{fmt}', 'base64')
+class {fmt.capitalize()}ToBase64Converter(ImageConverter):
+    '''Convert {fmt.upper()} image to base64 string.'''
+    def _convert(self, data, **options):
+        return _image_to_base64(data, '{fmt}')
+""", globals())
+
+# Add image formats to binary (01 string) converters  
+for fmt in ["png", "gif", "bmp", "tiff", "webp", "ico"]:
+    exec(f"""
+@register_converter('{fmt}', 'binary')
+class {fmt.capitalize()}ToBinaryConverter(ImageConverter):
+    '''Convert {fmt.upper()} image to binary (01 string).'''
+    def _convert(self, data, **options):
+        # Load image and convert to bytes
+        if isinstance(data, str):
+            if os.path.exists(data):
+                with open(data, 'rb') as f:
+                    image_bytes = f.read()
+            else:
+                try:
+                    image_bytes = base64.b64decode(data)
+                except:
+                    raise ValidationError("Invalid image data")
+        else:
+            image_bytes = data
+        # Convert bytes to binary string (01)
+        return ''.join(f'{{byte:08b}}' for byte in image_bytes)
+""", globals())
+
+# Add hex ↔ base64 conversions
+@register_converter('hex', 'base64')
+class HexToBase64Converter(BaseConverter):
+    """Convert hexadecimal to base64."""
+    def _convert(self, data, **options):
+        if not isinstance(data, str):
+            data = str(data)
+        # Clean hex string
+        cleaned = data.replace('0x', '').replace(':', '').replace('-', '').replace(' ', '').replace('\\n', '').replace('\\r', '').replace('\\t', '')
+        try:
+            binary_data = bytes.fromhex(cleaned)
+            return base64.b64encode(binary_data).decode('utf-8')
+        except ValueError as e:
+            raise ValidationError(f"Invalid hexadecimal string: {{str(e)}}")
+
+@register_converter('base64', 'hex')
+class Base64ToHexConverter(BaseConverter):
+    """Convert base64 to hexadecimal."""
+    def _convert(self, data, **options):
+        if not isinstance(data, str):
+            data = str(data)
+        try:
+            binary_data = base64.b64decode(data)
+            return binary_data.hex()
+        except Exception as e:
+            raise ValidationError(f"Invalid base64 string: {{str(e)}}")
+
+# Add binary (01 string) ↔ hex converters
+@register_converter('binary', 'hex')  
+class BinaryStringToHexConverter(BaseConverter):
+    """Convert binary (01 string) to hexadecimal."""
+    def _convert(self, data, **options):
+        if not isinstance(data, str):
+            data = str(data)
+        # Remove whitespace
+        data = data.replace(' ', '').replace('\\n', '').replace('\\r', '').replace('\\t', '')
+        # Validate binary string
+        if not all(c in '01' for c in data):
+            raise ValidationError("Input must be a binary string (only 0 and 1)")
+        # Pad if needed
+        if len(data) % 8 != 0:
+            padding = 8 - (len(data) % 8)
+            data = '0' * padding + data
+        # Convert to hex
+        hex_str = ''
+        for i in range(0, len(data), 8):
+            byte_val = int(data[i:i+8], 2)
+            hex_str += f'{{byte_val:02x}}'
+        return hex_str
+
+@register_converter('hex', 'binary')
+class HexToBinaryStringConverter(BaseConverter):
+    """Convert hexadecimal to binary (01 string)."""
+    def _convert(self, data, **options):
+        if not isinstance(data, str):
+            data = str(data)
+        # Clean hex string
+        cleaned = data.replace('0x', '').replace(':', '').replace('-', '').replace(' ', '').replace('\\n', '').replace('\\r', '').replace('\\t', '')
+        try:
+            binary_str = ''
+            for i in range(0, len(cleaned), 2):
+                hex_byte = cleaned[i:i+2]
+                byte_val = int(hex_byte, 16)
+                binary_str += f'{{byte_val:08b}}'
+            return binary_str
+        except ValueError as e:
+            raise ValidationError(f"Invalid hexadecimal string: {{str(e)}}")
+
+# Helper function for generic image format conversion
+def _convert_image_format(data, from_fmt, to_fmt):
+    """Convert between any two image formats."""
+    # Load image from data
+    if isinstance(data, str):
+        if os.path.exists(data):
+            with open(data, 'rb') as f:
+                data = f.read()
+        else:
+            try:
+                data = base64.b64decode(data)
+            except:
+                raise ValidationError("Invalid image data")
+    
+    try:
+        image = Image.open(io.BytesIO(data))
+        output = io.BytesIO()
+        
+        # Handle JPEG format specifically (requires RGB mode)
+        if to_fmt.lower() == 'jpeg':
+            if image.mode in ('RGBA', 'LA', 'P'):
+                if image.mode == 'P':
+                    image = image.convert('RGBA')
+                background = Image.new('RGB', image.size, (255, 255, 255))
+                if image.mode == 'RGBA' or image.mode == 'LA':
+                    background.paste(image, mask=image.split()[-1])
+                else:
+                    background.paste(image)
+                image = background
+            elif image.mode != 'RGB':
+                image = image.convert('RGB')
+        
+        image.save(output, format=to_fmt.upper())
+        return output.getvalue()
+    except Exception as e:
+        raise ConversionError(f"Failed to convert {{from_fmt.upper()}} to {{to_fmt.upper()}}: {{str(e)}}")
+
+# Add all image format to image format conversions dynamically
+image_formats = ["jpeg", "png", "gif", "bmp", "tiff", "webp", "ico"]
+for from_fmt in image_formats:
+    for to_fmt in image_formats:
+        if from_fmt != to_fmt:  # Skip same format conversions
+            exec(f"""
+@register_converter('{from_fmt}', '{to_fmt}')
+class {from_fmt.capitalize()}To{to_fmt.capitalize()}DynamicConverter(ImageConverter):
+    '''Convert {from_fmt.upper()} to {to_fmt.upper()} image format.'''
+    def _convert(self, data, **options):
+        return _convert_image_format(data, '{from_fmt}', '{to_fmt}')
+""", globals())

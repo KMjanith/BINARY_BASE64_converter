@@ -36,49 +36,51 @@ CORS(app, origins=['http://localhost:3000', 'http://127.0.0.1:3000'])
 # Initialize the converter registry
 registry = ConversionRegistry()
 
-# Available formats for dropdowns
-AVAILABLE_FORMATS = [
-    # Text and Encoding Formats
-    ('text', '📝 Plain Text'),
-    ('binary', '🔢 Binary Data (e.g., 0011001100)'),
-    ('base64', '🔤 Base64 Encoded'),
-    ('hex', '🔣 Hexadecimal'),
-    ('url_encoded', '🌐 URL Encoded'),
-    ('html_encoded', '📄 HTML Encoded'),
-    
-    # Data Formats
-    ('json', '📋 JSON String'),
-    ('dict', '🐍 Python Dictionary'),
-    ('csv', '📊 CSV Data'),
-    ('yaml', '📄 YAML Data'),
-    
-    # Number Formats
-    ('decimal', '🔢 Decimal Number'),
-    ('binary_num', '🔢 Binary Number'),
-    ('hex_num', '🔢 Hexadecimal Number'),
-    ('octal', '🔢 Octal Number'),
-    
-    # Hash Formats
-    ('md5', '🔐 MD5 Hash'),
-    ('sha1', '🔐 SHA1 Hash'),
-    ('sha256', '🔐 SHA256 Hash'),
-    ('sha512', '🔐 SHA512 Hash'),
-    
-    # Image Formats
-    ('jpeg', '📸 JPEG Image'),
-    ('png', '🖼️ PNG Image'),
-    ('gif', '🎞️ GIF Image'),
-    ('bmp', '🖼️ BMP Image'),
-    ('tiff', '📷 TIFF Image'),
-    ('webp', '🌐 WebP Image'),
-    ('ico', '⚡ ICO Icon'),
-    ('image', '🖼️ Generic Image'),
+
+# Categorized formats for grouped dropdowns
+AVAILABLE_FORMAT_CATEGORIES = [
+    ("Text & Encoding", [
+        ('text', '📝 Plain Text'),
+        ('binary', '🔢 Binary Data (e.g., 0011001100)'),
+        ('base64', '🔤 Base64 Encoded'),
+        ('hex', '🔣 Hexadecimal'),
+        ('url_encoded', '🌐 URL Encoded'),
+        ('html_encoded', '📄 HTML Encoded'),
+    ]),
+    ("Data Formats", [
+        ('json', '📋 JSON String'),
+        ('dict', '🐍 Python Dictionary'),
+        ('csv', '📊 CSV Data'),
+        ('yaml', '📄 YAML Data'),
+    ]),
+    ("Number Conversions", [
+        ('decimal', '🔢 Decimal Number'),
+        ('binary_num', '🔢 Binary Number'),
+        ('hex_num', '🔢 Hexadecimal Number'),
+        ('octal', '🔢 Octal Number'),
+    ]),
+    ("Hash Functions", [
+        ('md5', '🔐 MD5 Hash'),
+        ('sha1', '🔐 SHA1 Hash'),
+        ('sha256', '🔐 SHA256 Hash'),
+        ('sha512', '🔐 SHA512 Hash'),
+    ]),
+    ("Image Conversions", [
+        ('jpeg', '📸 JPEG Image'),
+        ('png', '🖼️ PNG Image'),
+        ('gif', '🎞️ GIF Image'),
+        ('bmp', '🖼️ BMP Image'),
+        ('tiff', '📷 TIFF Image'),
+        ('webp', '🌐 WebP Image'),
+        ('ico', '⚡ ICO Icon'),
+        ('image', '🖼️ Generic Image'),
+    ]),
 ]
 
 @app.route('/')
 def index():
     """Main conversion page."""
-    return render_template('index.html', formats=AVAILABLE_FORMATS)
+    return render_template('index.html', format_categories=AVAILABLE_FORMAT_CATEGORIES)
 
 @app.route('/convert', methods=['POST'])
 def convert_data():
@@ -135,6 +137,19 @@ def convert_data():
                     'error': 'Please enter some data to convert'
                 })
         
+        # Special case: hex to binary (01 string)
+        if from_format == 'hex' and to_format == 'binary':
+            # Use the new binary_01 converter
+            result = convert(input_data, 'hex', 'binary_01')
+            # Mark for string display
+            result_type = 'binary (01 string)'
+            result_display = result
+            return jsonify({
+                'success': True,
+                'result': result_display,
+                'result_type': result_type,
+                'conversion': f"{from_format} → {to_format}"
+            })
         # Perform conversion
         result = convert(input_data, from_format, to_format)
         

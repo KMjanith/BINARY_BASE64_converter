@@ -389,8 +389,12 @@
                         <label for="from_format">From Format:</label>
                         <select id="from_format" name="from_format" required>
                             <option value="">Select source format...</option>
-                            {% for value, label in formats %}
-                            <option value="{{ value }}">{{ label }}</option>
+                            {% for category, formats in format_categories %}
+                            <optgroup label="{{ category }}">
+                                {% for value, label in formats %}
+                                <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </optgroup>
                             {% endfor %}
                         </select>
                     </div>
@@ -399,8 +403,12 @@
                         <label for="to_format">To Format:</label>
                         <select id="to_format" name="to_format" required>
                             <option value="">Select target format...</option>
-                            {% for value, label in formats %}
-                            <option value="{{ value }}">{{ label }}</option>
+                            {% for category, formats in format_categories %}
+                            <optgroup label="{{ category }}">
+                                {% for value, label in formats %}
+                                <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </optgroup>
                             {% endfor %}
                         </select>
                     </div>
