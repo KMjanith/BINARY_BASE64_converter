@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Post-installation script for Universal File Operator
+
+set -e
+
+# Set permissions
+chmod +x /opt/universal-file-operator/launch.sh
+
+# Update desktop database
+if command -v update-desktop-database >/dev/null 2>&1; then
+    update-desktop-database /usr/share/applications
+fi
+
+# Update icon cache
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+    gtk-update-icon-cache /usr/share/pixmaps
+fi
+
+echo "Universal File Operator has been installed successfully!"
+echo "You can find it in your applications menu or run it from the command line."
+echo ""
+echo "To start the application:"
+echo "  1. Open Applications menu → Office → Universal File Operator"
+echo "  2. Or run: /opt/universal-file-operator/launch.sh"
+echo ""
+echo "The application will open in your default web browser."
