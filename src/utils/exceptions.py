@@ -1,5 +1,5 @@
 """
-Custom Exceptions for Universal Format Converter
+Custom Exceptions for Universal File Operator
 ===============================================
 
 This module defines custom exception classes that provide specific error handling

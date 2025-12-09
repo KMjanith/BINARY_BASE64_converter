@@ -1,5 +1,5 @@
 """
-Command Line Interface for Universal Format Converter
+Command Line Interface for Universal File Operator
 ===================================================
 
 This module provides a user-friendly CLI using the Click framework.
@@ -58,7 +58,7 @@ def setup_logging(verbose: bool = False):
 @click.pass_context
 def cli(ctx, verbose):
     """
-    Universal Format Converter - Convert between various data formats.
+    Universal File Operator - Convert between various data formats.
     
     This tool supports bidirectional conversions between text encodings,
     data formats, number bases, and more.
@@ -68,9 +68,9 @@ def cli(ctx, verbose):
     setup_logging(verbose)
     
     if RICH_AVAILABLE:
-        console.print("🔄 [bold blue]Universal Format Converter[/bold blue]", style="bold")
+        console.print("🔄 [bold blue]Universal File Operator[/bold blue]", style="bold")
     else:
-        print("🔄 Universal Format Converter")
+        print("🔄 Universal File Operator")
 
 
 @cli.command()

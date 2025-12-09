@@ -1,5 +1,5 @@
 """
-Universal Format Converter
+Universal File Operator
 =========================
 
 An educational Python project for learning format conversions with bidirectional support.
@@ -29,7 +29,7 @@ Date: October 2025
 __version__ = "1.0.0"
 __author__ = "Kavindu Janith"
 __email__ = ""
-__description__ = "Educational Universal Format Converter with Web GUI"
+__description__ = "Educational Universal File Operator with Web GUI"
 
 # Version info as a tuple for programmatic access
 VERSION_INFO = tuple(map(int, __version__.split('.')))

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal File Operator</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 100%);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        .operations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .operation-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .operation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        }
+
+        .operation-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .operation-card:hover .card-icon {
+            transform: scale(1.1);
+        }
+
+        .card-icon {
+            font-size: 2.8em;
+            text-align: center;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .card-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .card-description {
+            font-size: 0.95em;
+            text-align: center;
+            color: #7f8c8d;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .card-features {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        .card-features li {
+            padding: 5px 0;
+            color: #34495e;
+            position: relative;
+            padding-left: 20px;
+            font-size: 0.9em;
+        }
+
+        .card-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        .card-button {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .card-button:hover {
+            background: linear-gradient(135deg, #229954 0%, #27ae60 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(39, 174, 96, 0.3);
+        }
+
+        .pdf-card .card-button {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .pdf-card .card-button:hover {
+            background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+            box-shadow: 0 8px 16px rgba(231, 76, 60, 0.3);
+        }
+
+        .pdf-card::before {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer p {
+            font-size: 1em;
+            margin-bottom: 8px;
+        }
+
+        .version {
+            font-size: 0.85em;
+            opacity: 0.7;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .header p {
+                font-size: 1.1em;
+            }
+
+            .operations-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .operation-card {
+                padding: 30px;
+            }
+
+            .card-icon {
+                font-size: 3em;
+            }
+
+            .card-title {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Animation for page load */
+        .operation-card {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .operation-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .operation-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1>Universal File Operator</h1>
+            <p>Your all-in-one solution for file conversions and PDF operations. Choose your desired operation below to get started.</p>
+        </div>
+
+        <!-- Operations Grid -->
+        <div class="operations-grid">
+            <!-- File Converter Card -->
+            <a href="/converter" class="operation-card">
+                <div class="card-icon">🔄</div>
+                <h2 class="card-title">File Converter</h2>
+                <p class="card-description">
+                    Convert between various data formats including text encoding, binary data, images, and more.
+                </p>
+                <ul class="card-features">
+                    <li>Text & Encoding conversions</li>
+                    <li>Binary to Base64 conversion</li>
+                    <li>Image format conversion</li>
+                    <li>Hash generation</li>
+                    <li>URL & HTML encoding</li>
+                    <li>Number base conversions</li>
+                </ul>
+                <button class="card-button">Start Converting</button>
+            </a>
+
+            <!-- PDF Merge Card -->
+            <a href="/pdf-merge" class="operation-card pdf-card">
+                <div class="card-icon">📄</div>
+                <h2 class="card-title">PDF Merge</h2>
+                <p class="card-description">
+                    Combine multiple PDF files into a single document with customizable ordering and settings.
+                </p>
+                <ul class="card-features">
+                    <li>Merge multiple PDF files</li>
+                    <li>Drag & drop file ordering</li>
+                    <li>Preview before merging</li>
+                    <li>Custom output filename</li>
+                    <li>Batch processing support</li>
+                    <li>Download merged PDF</li>
+                </ul>
+                <button class="card-button">Merge PDFs</button>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Universal File Operator</p>
+            <p class="version">Educational Python Project - Version 1.0</p>
+        </div>
+    </div>
+
+    <script>
+        // Add click handlers for better UX
+        document.querySelectorAll('.operation-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Add a subtle animation effect
+                this.style.transform = 'translateY(-8px) scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-8px) scale(1)';
+                }, 150);
+            });
+        });
+
+        // Preload hover effects
+        document.querySelectorAll('.operation-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

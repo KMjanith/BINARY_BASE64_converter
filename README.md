@@ -1,4 +1,4 @@
-# Universal Format Converter
+# Universal File Operator
 
 A comprehensive Python-based conversion system that supports converting between various data formats with both CLI and web interfaces. Currently supports **77+ conversion combinations** with modern web GUI and extensible plugin architecture.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test script for the Universal Format Converter
+Test script for the Universal File Operator
 ==============================================
 
 This script tests various converters to ensure they're working correctly.
@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 def test_basic_conversions():
     """Test basic conversion functionality."""
-    print("🧪 Testing Universal Format Converter")
+    print("🧪 Testing Universal File Operator")
     print("=" * 50)
     
     try:

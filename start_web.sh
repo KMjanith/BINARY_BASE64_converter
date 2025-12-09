@@ -1,8 +1,8 @@
 #!/bin/bash
-# Universal Format Converter - Quick Start Script
+# Universal File Operator - Quick Start Script
 # This script sets up and starts the web interface
 
-echo "🔄 Universal Format Converter - Quick Start"
+echo "🔄 Universal File Operator - Quick Start"
 echo "=========================================="
 
 # Check if virtual environment exists

@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Universal Format Converter - One-Click Startup Script
+# Universal File Operator - One-Click Startup Script
 # =====================================================
 
 set -e  # Exit on any error
 
-echo "🚀 Starting Universal Format Converter..."
+echo "🚀 Starting Universal File Operator..."
 echo "========================================="
 
 # Get the directory of this script
@@ -60,7 +60,7 @@ print('✅ Favicon created')
 fi
 
 echo ""
-echo "🌟 Universal Format Converter is ready!"
+echo "🌟 Universal File Operator is ready!"
 echo "======================================="
 echo ""
 echo "Available interfaces:"

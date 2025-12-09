@@ -1,8 +1,8 @@
 #!/bin/bash
-# Universal Format Converter - CLI Demo Script
+# Universal File Operator - CLI Demo Script
 # This script demonstrates the CLI interface capabilities
 
-echo "💻 Universal Format Converter - CLI Interface"
+echo "💻 Universal File Operator - CLI Interface"
 echo "============================================"
 
 # Check if virtual environment exists

@@ -1,9 +1,9 @@
-# Default configuration for Universal Format Converter
+# Default configuration for Universal File Operator
 # This file can be copied to ~/.converter/config.yaml for user customization
 
 # General settings
 app:
-  name: "Universal Format Converter"
+  name: "Universal File Operator"
   version: "1.0.0"
   debug: false
   log_level: "INFO"
