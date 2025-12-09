@@ -1,10 +1,51 @@
 # Universal File Operator
 
-A comprehensive Python-based conversion system that supports converting between various data formats with both CLI and web interfaces. Currently supports **77+ conversion combinations** with modern web GUI and extensible plugin architecture.
+A comprehensive Python-based conversion system that supports converting between various data formats with both CLI and web interfaces. Currently supports **77+ conversion combinations** with modern web GUI, PDF merging capabilities, and extensible plugin architecture.
+
+## Installation Options
+
+### Option 1: Ubuntu 24 Desktop Package (Recommended for Teams)
+
+**For easy distribution to team members on Ubuntu 24:**
+
+```bash
+# Download the .deb package and install script
+# Then run the team installer:
+./install-for-team.sh
+```
+
+**Manual installation:**
+```bash
+sudo dpkg -i universal-file-operator_1.0.0_all.deb
+sudo apt-get install -f  # Fix any dependency issues
+```
+
+**Usage after installation:**
+- Open **Applications** → **Office** → **Universal File Operator**
+- Or run: `/opt/universal-file-operator/launch.sh`
+- The app will automatically open in your web browser
+
+### Option 2: Development Setup
+
+**For developers and custom installations:**
+
+```bash
+git clone https://github.com/KMjanith/BINARY_BASE64_converter.git
+cd BINARY_BASE64_converter
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
 ## Features
 
-### Supported Conversions
+### Core Capabilities
+
+#### **📄 PDF Operations**
+- **PDF Merging**: Combine multiple PDFs with drag-and-drop reordering
+- **Preview Mode**: See complete merged document before finalizing
+- **Zoom Controls**: Adjust preview size (20%-200%)
+- **Auto-Reordering**: Alphabetical, size-based, or custom ordering
 
 #### **Encoding & Binary**
 - Binary ↔ Base64
@@ -46,10 +87,28 @@ A comprehensive Python-based conversion system that supports converting between 
 ### Dual Interface Support
 - **CLI Interface**: Command-line tool using Click framework
 - **Web Interface**: Flask-based web application with file upload and real-time conversion
-   pip install flask click rich pyyaml pillow python-magic
+- **Desktop Integration**: Ubuntu .deb package with applications menu entry
+
+## Quick Start
+
+### Using the Ubuntu Package (Recommended)
+
+1. **Install the package:**
+   ```bash
+   sudo dpkg -i universal-file-operator_1.0.0_all.deb
    ```
 
-### Start the Web Interface
+2. **Launch the application:**
+   - Open **Applications** → **Office** → **Universal File Operator**
+   - Or run: `/opt/universal-file-operator/launch.sh`
+
+3. **Use the features:**
+   - **File Converter**: Convert between 70+ formats
+   - **PDF Merger**: Combine and reorder PDFs with live preview
+
+### Development Setup
+
+### Development Setup
 
 **Option 1: Direct Flask App (Recommended)**
 ```bash
@@ -65,6 +124,25 @@ python -m src.web.app
 ```
 
 The web interface will be available at: **http://127.0.0.1:5000**
+
+## Team Distribution
+
+### For Ubuntu 24 Teams
+
+1. **Build the package** (if needed):
+   ```bash
+   dpkg-deb --build debian-package universal-file-operator_1.0.0_all.deb
+   ```
+
+2. **Share with team**:
+   - Send them `universal-file-operator_1.0.0_all.deb` and `install-for-team.sh`
+   - Team runs: `./install-for-team.sh`
+
+3. **Features for teams**:
+   - Professional desktop integration
+   - Automatic dependency management
+   - Easy uninstallation: `sudo dpkg -r universal-file-operator`
+   - Logs available at: `~/.universal-file-operator.log`
 
 ### Use the CLI Interface
 

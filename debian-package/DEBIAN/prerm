@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Pre-removal script for Universal File Operator
+
+set -e
+
+# Kill any running instances
+if [ -f "$HOME/.universal-file-operator.pid" ]; then
+    PID=$(cat "$HOME/.universal-file-operator.pid" 2>/dev/null || true)
+    if [ ! -z "$PID" ] && kill -0 "$PID" 2>/dev/null; then
+        echo "Stopping Universal File Operator (PID: $PID)..."
+        kill "$PID" 2>/dev/null || true
+        sleep 2
+        # Force kill if still running
+        kill -9 "$PID" 2>/dev/null || true
+    fi
+    rm -f "$HOME/.universal-file-operator.pid"
+fi
+
+# Kill any processes using the typical ports
+for port in {5000..5010}; do
+    PID=$(lsof -t -i:$port 2>/dev/null || true)
+    if [ ! -z "$PID" ]; then
+        echo "Stopping process on port $port (PID: $PID)..."
+        kill "$PID" 2>/dev/null || true
+    fi
+done
