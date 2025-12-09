@@ -1,5 +1,5 @@
 """
-Web Interface for Universal Format Converter
+Web Interface for Universal File Operator
 ===========================================
 
 A simple Flask web application with dropdown selection for formats.
@@ -12,12 +12,14 @@ Learning Concepts:
 - AJAX for dynamic updates (future enhancement)
 """
 
-from flask import Flask, render_template, request, jsonify, flash, send_file
+from flask import Flask, render_template, request, jsonify, flash, send_file, Response
 from flask_cors import CORS
 import sys
 import os
 import base64
 import io
+import tempfile
+from datetime import datetime
 
 # Add the project root to path for imports
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
@@ -26,6 +28,13 @@ sys.path.insert(0, project_root)
 from src.converters.registry import ConversionRegistry
 from src.utils.exceptions import ConversionError, ValidationError, UnsupportedFormatError
 from src.cli.main import convert, list_conversions
+
+# Import PDF processing libraries
+try:
+    import PyPDF2
+    PDF_AVAILABLE = True
+except ImportError:
+    PDF_AVAILABLE = False
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
@@ -78,9 +87,21 @@ AVAILABLE_FORMAT_CATEGORIES = [
 ]
 
 @app.route('/')
-def index():
-    """Main conversion page."""
-    return render_template('index.html', format_categories=AVAILABLE_FORMAT_CATEGORIES)
+def landing():
+    """Landing page with operation selection."""
+    return render_template('landing.html')
+
+@app.route('/converter')
+def converter():
+    """File converter page."""
+    return render_template('converter.html', format_categories=AVAILABLE_FORMAT_CATEGORIES)
+
+@app.route('/pdf-merge')
+def pdf_merge():
+    """PDF merge page."""
+    if not PDF_AVAILABLE:
+        flash('PDF functionality is not available. Please install PyPDF2: pip install PyPDF2')
+    return render_template('pdf_merge.html')
 
 @app.route('/convert', methods=['POST'])
 def convert_data():
@@ -375,11 +396,106 @@ def get_conversions():
             'error': str(e)
         })
 
+@app.route('/merge-pdf', methods=['POST'])
+def merge_pdf():
+    """Handle PDF merge requests."""
+    if not PDF_AVAILABLE:
+        return jsonify({
+            'success': False,
+            'error': 'PDF functionality is not available. Please install PyPDF2: pip install PyPDF2'
+        }), 400
+
+    try:
+        # Get uploaded files
+        uploaded_files = []
+        output_filename = request.form.get('output_filename', 'merged-document.pdf')
+        
+        # Collect all PDF files from the request
+        for key in sorted(request.files.keys()):  # Sort to maintain order
+            if key.startswith('pdf_'):
+                file = request.files[key]
+                if file and file.filename and file.filename.endswith('.pdf'):
+                    uploaded_files.append(file)
+                elif file and file.filename:
+                    return jsonify({
+                        'success': False,
+                        'error': f'File "{file.filename}" is not a PDF file'
+                    }), 400
+        
+        if len(uploaded_files) < 2:
+            return jsonify({
+                'success': False,
+                'error': 'At least 2 PDF files are required for merging'
+            }), 400
+        
+        # Create a PDF merger
+        pdf_merger = PyPDF2.PdfMerger()
+        
+        try:
+            # Add each PDF file to the merger
+            for i, uploaded_file in enumerate(uploaded_files):
+                try:
+                    # Reset file pointer
+                    uploaded_file.seek(0)
+                    # Validate that it's a proper PDF
+                    pdf_reader = PyPDF2.PdfReader(uploaded_file)
+                    if len(pdf_reader.pages) == 0:
+                        return jsonify({
+                            'success': False,
+                            'error': f'File "{uploaded_file.filename}" appears to be an empty or corrupted PDF'
+                        }), 400
+                    
+                    # Reset again and append to merger
+                    uploaded_file.seek(0)
+                    pdf_merger.append(uploaded_file)
+                    
+                except Exception as file_error:
+                    pdf_merger.close()
+                    return jsonify({
+                        'success': False,
+                        'error': f'Error processing file "{uploaded_file.filename}": {str(file_error)}'
+                    }), 400
+            
+            # Create output buffer
+            output_buffer = io.BytesIO()
+            pdf_merger.write(output_buffer)
+            pdf_merger.close()
+            
+            # Prepare the response
+            output_buffer.seek(0)
+            
+            # Ensure the filename ends with .pdf
+            if not output_filename.endswith('.pdf'):
+                output_filename += '.pdf'
+            
+            return send_file(
+                output_buffer,
+                mimetype='application/pdf',
+                as_attachment=True,
+                download_name=output_filename
+            )
+        
+        except Exception as merge_error:
+            try:
+                pdf_merger.close()
+            except:
+                pass
+            return jsonify({
+                'success': False,
+                'error': f'Failed to merge PDFs: {str(merge_error)}'
+            }), 500
+            
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Server error: {str(e)}'
+        }), 500
+
 if __name__ == '__main__':
     # Import converters to register them
     from src.converters import simple_converters
     
-    print("🌐 Starting Universal Format Converter Web Interface")
+    print("🌐 Starting Universal File Operator Web Interface")
     print("📋 Available conversions:")
     
     try:

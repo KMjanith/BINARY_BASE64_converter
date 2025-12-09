@@ -1,5 +1,5 @@
 """
-Setup script for Universal Format Converter
+Setup script for Universal File Operator
 
 This allows the package to be installed as a proper Python package:
     pip install -e .        # Editable install for development
@@ -15,7 +15,7 @@ def read_readme():
     if os.path.exists(readme_path):
         with open(readme_path, 'r', encoding='utf-8') as f:
             return f.read()
-    return "Universal Format Converter - Educational Python Project"
+    return "Universal File Operator - Educational Python Project"
 
 # Read requirements from requirements.txt
 def read_requirements():
@@ -35,7 +35,7 @@ setup(
     version="1.0.0",
     author="Kavindu Janith",
     author_email="",
-    description="Educational universal format converter with web GUI",
+    description="Educational universal file operator with web GUI",
     long_description=read_readme(),
     long_description_content_type="text/markdown",
     url="https://github.com/yourusername/universal-format-converter",

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal File Operator</title>
+    <title>File Converter - Universal File Operator</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -35,6 +35,31 @@
             color: white;
             padding: 30px;
             text-align: center;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) translateX(-2px);
         }
 
         .header h1 {
@@ -341,6 +366,16 @@
                 gap: 15px;
             }
             
+            .header {
+                padding: 20px;
+            }
+            
+            .back-button {
+                position: static;
+                transform: none;
+                margin-bottom: 15px;
+            }
+            
             .header h1 {
                 font-size: 2em;
             }
@@ -354,7 +389,10 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Universal File Operator</h1>
+            <a href="/" class="back-button">
+                ← Back to Home
+            </a>
+            <h1>File Converter</h1>
             <p>Convert between various data formats with ease</p>
         </div>
         

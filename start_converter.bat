@@ -1,8 +1,8 @@
 @echo off
-REM Universal Format Converter - Windows Startup Script
+REM Universal File Operator - Windows Startup Script
 REM ===================================================
 
-echo 🚀 Starting Universal Format Converter...
+echo 🚀 Starting Universal File Operator...
 echo =========================================
 
 REM Check if Python is available
@@ -41,7 +41,7 @@ if not exist "src\web\static\favicon.ico" (
 )
 
 echo.
-echo 🌟 Universal Format Converter is ready!
+echo 🌟 Universal File Operator is ready!
 echo =======================================
 echo.
 echo Available interfaces:
