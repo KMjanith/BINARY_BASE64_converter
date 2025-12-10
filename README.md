@@ -350,6 +350,55 @@ python -m src.cli.main list-conversions | head -20
 6. **Performance**: Async processing for large files
 7. **Database**: Save conversion history and user preferences
 
+## Uninstallation
+
+### Uninstalling the Ubuntu Package
+
+If you installed using the .deb package and want to remove it:
+
+**Standard Uninstall:**
+```bash
+# Remove the package
+sudo dpkg -r universal-file-operator
+
+# Remove remaining installation files
+sudo rm -rf /opt/universal-file-operator
+```
+
+**Complete Purge (Alternative):**
+```bash
+# Completely remove package and all config files
+sudo dpkg -P universal-file-operator
+```
+
+**Using apt (Alternative):**
+```bash
+# If installed via apt
+sudo apt remove universal-file-operator
+```
+
+**Verify Removal:**
+```bash
+# Check if package is removed
+dpkg -l | grep universal-file-operator
+
+# Check if directories are gone
+ls /opt/ | grep universal-file-operator
+```
+
+### Uninstalling Development Setup
+
+For development installations:
+
+```bash
+# Deactivate virtual environment
+deactivate
+
+# Remove the project directory
+cd ..
+rm -rf BINARY_BASE64_converter
+```
+
 ## Troubleshooting
 
 ### Common Issues & Solutions

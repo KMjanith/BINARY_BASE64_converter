@@ -17,7 +17,11 @@ log() {
 # Function to show notification
 notify() {
     if command -v notify-send &> /dev/null; then
-        notify-send "Universal File Operator" "$1" --icon="$APP_DIR/universal-file-operator.png" --time=3000
+        notify-send "Universal File Operator" "$1" --icon="$APP_DIR/universal-file-operator.png" --expire-time=3000 2>/dev/null || \
+        notify-send "Universal File Operator" "$1" 2>/dev/null || \
+        echo "Notification: $1"
+    else
+        echo "Notification: $1"
     fi
 }
 
