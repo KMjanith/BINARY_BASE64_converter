@@ -2,6 +2,69 @@
 
 A comprehensive Python-based conversion system that supports converting between various data formats with both CLI and web interfaces. Currently supports **77+ conversion combinations** with modern web GUI, PDF merging capabilities, and extensible plugin architecture.
 
+## 🚀 Quick Installation & Usage Guide
+
+### Installing the Desktop Application (.deb Package)
+
+**Step 1: Download & Install**
+```bash
+# Install the .deb package
+sudo dpkg -i universal-file-operator_1.0.1_all.deb
+
+# Fix any dependency issues (if needed)
+sudo apt-get install -f
+```
+
+**Step 2: Launch the Application**
+```bash
+# Method 1: Use Applications menu
+# Go to Applications → Office → Universal File Operator
+
+# Method 2: Command line launch
+/opt/universal-file-operator/launch.sh
+
+# Method 3: Service management (Recommended)
+/opt/universal-file-operator/service.sh start
+```
+
+**Step 3: Stop the Application**
+```bash
+# Simple stop
+/opt/universal-file-operator/stop.sh
+
+# Or using service management
+/opt/universal-file-operator/service.sh stop
+
+# Check status
+/opt/universal-file-operator/service.sh status
+
+# Restart if needed
+/opt/universal-file-operator/service.sh restart
+```
+
+**Step 4: Uninstall (if needed)**
+```bash
+# Stop the application first
+/opt/universal-file-operator/service.sh stop
+
+# Remove the package
+sudo dpkg -r universal-file-operator
+
+# Remove remaining files
+sudo rm -rf /opt/universal-file-operator
+```
+
+### 🎯 Essential Commands Summary
+
+| Action | Command |
+|--------|---------|
+| **Install** | `sudo dpkg -i universal-file-operator_1.0.1_all.deb` |
+| **Start** | `/opt/universal-file-operator/service.sh start` |
+| **Stop** | `/opt/universal-file-operator/service.sh stop` |
+| **Status** | `/opt/universal-file-operator/service.sh status` |
+| **Restart** | `/opt/universal-file-operator/service.sh restart` |
+| **Uninstall** | `sudo dpkg -r universal-file-operator` |
+
 ## Installation Options
 
 ### Option 1: Ubuntu 24 Desktop Package (Recommended for Teams)
@@ -16,7 +79,7 @@ A comprehensive Python-based conversion system that supports converting between 
 
 **Manual installation:**
 ```bash
-sudo dpkg -i universal-file-operator_1.0.0_all.deb
+sudo dpkg -i universal-file-operator_1.0.1_all.deb
 sudo apt-get install -f  # Fix any dependency issues
 ```
 
@@ -356,7 +419,16 @@ python -m src.cli.main list-conversions | head -20
 
 If you installed using the .deb package and want to remove it:
 
-**Standard Uninstall:**
+**Step 1: Stop the Application First**
+```bash
+# Stop the running application
+/opt/universal-file-operator/service.sh stop
+
+# Or use the simple stop script
+/opt/universal-file-operator/stop.sh
+```
+
+**Step 2: Standard Uninstall**
 ```bash
 # Remove the package
 sudo dpkg -r universal-file-operator
@@ -367,6 +439,9 @@ sudo rm -rf /opt/universal-file-operator
 
 **Complete Purge (Alternative):**
 ```bash
+# Stop application first
+/opt/universal-file-operator/service.sh stop
+
 # Completely remove package and all config files
 sudo dpkg -P universal-file-operator
 ```

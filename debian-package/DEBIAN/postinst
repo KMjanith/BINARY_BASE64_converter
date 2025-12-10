@@ -14,7 +14,7 @@ fi
 
 # Update icon cache
 if command -v gtk-update-icon-cache >/dev/null 2>&1; then
-    gtk-update-icon-cache /usr/share/pixmaps
+    gtk-update-icon-cache /usr/share/pixmaps 2>/dev/null || true
 fi
 
 echo "Universal File Operator has been installed successfully!"
