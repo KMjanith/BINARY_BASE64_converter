@@ -1,6 +1,6 @@
 # Universal File Operator
 
-A comprehensive Python-based conversion system that supports converting between various data formats with both CLI and web interfaces. Currently supports **77+ conversion combinations** with modern web GUI, PDF merging capabilities, and extensible plugin architecture.
+A comprehensive Python-based conversion system that supports converting between various data formats with both CLI and web interfaces. Currently supports **77+ conversion combinations** with modern web GUI, PDF merging capabilities, text comparison tools, and extensible plugin architecture.
 
 ## 🚀 Quick Installation & Usage Guide
 
@@ -109,6 +109,14 @@ pip install -r requirements.txt
 - **Preview Mode**: See complete merged document before finalizing
 - **Zoom Controls**: Adjust preview size (20%-200%)
 - **Auto-Reordering**: Alphabetical, size-based, or custom ordering
+
+#### **📊 Text Comparison**
+- **Side-by-side comparison**: Compare two texts with visual highlighting
+- **Similarity percentage**: Calculate and display accuracy percentage
+- **Difference highlighting**: Visual indicators for added, deleted, and modified content
+- **Statistics**: Word count, character count, and line count for both texts
+- **File support**: Drag and drop text files (.txt, .md, .csv, .json, .xml, .html, .py, .js, etc.)
+- **Multiple input methods**: Type/paste text or drag files for automatic content loading
 
 #### **Encoding & Binary**
 - Binary ↔ Base64
