@@ -9,7 +9,7 @@ A comprehensive Python-based conversion system that supports converting between 
 **Step 1: Download & Install**
 ```bash
 # Install the .deb package
-sudo dpkg -i universal-file-operator_1.0.1_all.deb
+sudo dpkg -i universal-file-operator_1.0.2_all.deb
 
 # Fix any dependency issues (if needed)
 sudo apt-get install -f
