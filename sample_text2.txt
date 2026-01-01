@@ -1,0 +1,10 @@
+This is the second sample text file.
+It contains multiple lines to test the text comparison functionality.
+
+Features included:
+- Line-by-line comparison
+- Word and character counting  
+- Accuracy percentage calculation
+- Visual highlighting of differences
+
+This file can be dragged and dropped into the text comparison tool for testing.

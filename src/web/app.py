@@ -28,6 +28,7 @@ sys.path.insert(0, project_root)
 from src.converters.registry import ConversionRegistry
 from src.utils.exceptions import ConversionError, ValidationError, UnsupportedFormatError
 from src.cli.main import convert, list_conversions
+from src.converters.text_compare import compare_texts
 
 # Import PDF processing libraries
 try:
@@ -102,6 +103,46 @@ def pdf_merge():
     if not PDF_AVAILABLE:
         flash('PDF functionality is not available. Please install PyPDF2: pip install PyPDF2')
     return render_template('pdf_merge.html')
+
+@app.route('/text-compare')
+def text_compare():
+    """Text comparison page."""
+    return render_template('text_compare.html')
+
+@app.route('/compare-texts', methods=['POST'])
+def compare_texts_api():
+    """Handle text comparison requests."""
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'No JSON data provided'
+            }), 400
+        
+        text1 = data.get('text1', '').strip()
+        text2 = data.get('text2', '').strip()
+        
+        if not text1 or not text2:
+            return jsonify({
+                'success': False,
+                'error': 'Both text fields are required'
+            }), 400
+        
+        # Compare the texts
+        result = compare_texts(text1, text2)
+        
+        return jsonify({
+            'success': True,
+            **result
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
 
 @app.route('/convert', methods=['POST'])
 def convert_data():
